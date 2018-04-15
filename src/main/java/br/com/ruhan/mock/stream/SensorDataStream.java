@@ -19,7 +19,7 @@ public class SensorDataStream implements Runnable {
     public void run() {
 
         final double humidity = 65;
-        final double temperature = 96;
+        final double temperature = 80;
         final String source = "abcd";
 
         final String sensorNameHumidity = "Humidity";
@@ -36,6 +36,7 @@ public class SensorDataStream implements Runnable {
             sensorTemperature.setSensorName( sensorNameTemperature );
             sensorTemperature.setSensorValue( Arrays.asList( temperature ) );
             sensorTemperature.setSource( source );
+            sensorTemperature.setUuid("");
 
           //  epRuntime.sendEvent( sensorHumidity );
             epRuntime.sendEvent( sensorTemperature );

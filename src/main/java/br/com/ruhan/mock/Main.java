@@ -22,8 +22,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         connection = new MrUdpNodeConnection();
 
-        final InetSocketAddress inetSocketAddress = new InetSocketAddress("192.168.0.200", 5500);
-//        connection.connect( inetSocketAddress );
+        final InetSocketAddress inetSocketAddress = new InetSocketAddress("10.211.55.4", 5500);
+        connection.connect( inetSocketAddress );
 
         final Configuration cepConfig = new Configuration();
         cepConfig.addEventType("SensorData", SensorData.class.getName());
@@ -67,7 +67,6 @@ public class Main {
 
         final SensorDataStream sensorDataStream = new SensorDataStream(epRuntime);
         sensorDataStream.run();
-
     }
 
     public static void sendMessage( Object msg ) throws IOException, InterruptedException {
@@ -78,9 +77,9 @@ public class Main {
 
         applicationMessage.setContent( json.getBytes() );
 
-//        connection.sendMessage( applicationMessage );
+        connection.sendMessage( applicationMessage );
         System.out.println(new Date() + " Sent message: " + json );
 
-        Thread.sleep( 10 * 1000 );
+        Thread.sleep( 100 * 1000 );
     }
 }
