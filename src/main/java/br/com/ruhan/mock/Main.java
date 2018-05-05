@@ -10,6 +10,8 @@ import lac.cnclib.sddl.message.ApplicationMessage;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -59,11 +61,20 @@ public class Main {
 //                        "FROM AVGHumidityTemperature");
 
         final EPStatement insertStatement = cepAdm.createEPL(
-                "SELECT avg(temperature.sensorValue[0]) as avgTemperature " +
-                    "FROM SensorData(sensorName='Temperature').win:time (10 sec) as temperature  "
+                "SELECT avg(temperature.sensorValue[0]) as avgTemperature, " +
+                        "avg(humidity.sensorValue[0]) as avgHumidity " +
+                    "FROM SensorData(sensorName='Temperature').win:time (10 sec) as temperature, " +
+                        "SensorData(sensorName='Humidity').win:time (10 sec) as humidity  " +
+                "WHERE temperature.source = humidity.source "
         );
 
+//        final EPStatement insertStatement2 = cepAdm.createEPL(
+//                "SELECT avg(temperature.sensorValue[0]) as avgTemperature " +
+//                        "FROM SensorData(sensorName='Temperature').win:time (10 sec) as temperature  "
+//        );
+
         insertStatement.addListener(new EventListener());
+
 
         final SensorDataStream sensorDataStream = new SensorDataStream(epRuntime);
         sensorDataStream.run();
@@ -74,12 +85,14 @@ public class Main {
         final Gson gson = new Gson();
 
         final String json = gson.toJson(msg);
-
         applicationMessage.setContent( json.getBytes() );
-
         connection.sendMessage( applicationMessage );
-        System.out.println(new Date() + " Sent message: " + json );
 
-        Thread.sleep( 100 * 1000 );
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy:HH:mm:ss.sssss");
+        Date now = new Date();
+
+        System.out.println( dateFormat.format(now) + " Sent message: " + json );
+
+        Thread.sleep( 500 );
     }
 }

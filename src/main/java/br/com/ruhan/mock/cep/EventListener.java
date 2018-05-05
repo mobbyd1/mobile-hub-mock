@@ -19,16 +19,24 @@ public class EventListener implements UpdateListener {
     public void update(EventBean[] arg0, EventBean[] arg1) {
 
         final Map<String, Double> map = (Map<String, Double>) arg0[0].getUnderlying();
+
         final Double heatIndex = map.get("avgTemperature");
+        final Double humidityIndex = map.get("avgHumidity");
 
         final EventData eventData = new EventData();
         eventData.setTag("EventData");
         eventData.setLabel("HeatIndex");
         eventData.setData( new Value( heatIndex ) );
 
+        final EventData eventData2 = new EventData();
+        eventData2.setTag("EventData");
+        eventData2.setLabel("HumidityIndex");
+        eventData2.setData( new Value( humidityIndex ) );
+
         try {
 
             Main.sendMessage( eventData );
+            Main.sendMessage( eventData2 );
 
         } catch (IOException e) {
             e.printStackTrace();
